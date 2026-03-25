@@ -1,8 +1,14 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 export async function POST(req) {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return Response.json(
+      { error: "Stripe not configured" },
+      { status: 500 }
+    );
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const body = await req.json();
   const { amount, email } = body;
 
